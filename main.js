@@ -43,7 +43,47 @@ const loadTasks = async () => {
 // Event listener for the Load button
 loadTasksBtn.addEventListener('click', loadTasks);
 
-// Placeholder for render function
+// Render tasks to the DOM
 const renderTasks = () => {
-    console.log("Tasks are ready to render", taskManager.tasks);
+    // Clear the current list
+    taskListContainer.innerHTML = '';
+
+    // Iterate over tasks and create DOM elements
+    taskManager.tasks.forEach(task => {
+        // Create main task div[cite: 5]
+        const taskDiv = document.createElement('div');
+        taskDiv.className = 'task';
+        if (task.completed) {
+            taskDiv.classList.add('completed');
+        }
+
+        // Create span for title[cite: 5]
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = task.title;
+
+        // Create Toggle button
+        const toggleBtn = document.createElement('button');
+        toggleBtn.textContent = 'Toggle';
+        // Attach event listener instead of inline HTML[cite: 6]
+        toggleBtn.addEventListener('click', () => {
+            taskManager.toggleTask(task.id);
+            renderTasks(); // Re-render after state change[cite: 6]
+        });
+
+        // Create Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', () => {
+            taskManager.removeTask(task.id);
+            renderTasks(); // Re-render after state change[cite: 6]
+        });
+
+        // Append elements to the task div[cite: 6]
+        taskDiv.appendChild(titleSpan);
+        taskDiv.appendChild(toggleBtn);
+        taskDiv.appendChild(deleteBtn);
+
+        // Append task div to the container[cite: 6]
+        taskListContainer.appendChild(taskDiv);
+    });
 };
